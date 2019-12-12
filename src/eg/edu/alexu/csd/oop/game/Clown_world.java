@@ -30,22 +30,21 @@ public class Clown_world implements World {
 		moving_width[3]=(250);
 		// control objects (fighter)
 		control.add(new Clown_obj(screenWidth/2, (int)(screenHeight*0.8), "/Clown.png"));
-		control.add(new Clown_obj(screenWidth/2, (int)(screenHeight*0.8), "/spaceship.png"));
 		// moving objects (aliens)
 		for(int i=0; i <7; i++) {
-			moving.add(new Clown_obj(moving_width[0], really_height, "/alien" +"1"+ ".png"));
+			moving.add(new Clown_obj(moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			moving_width[0]+=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new Clown_obj(moving_width[1], really_height+200, "/alien" + "1"+ ".png"));
+			moving.add(new Clown_obj(moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			moving_width[1]+=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new Clown_obj(moving_width[2], really_height, "/alien" + "1"+ ".png"));
+			moving.add(new Clown_obj(moving_width[2], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			moving_width[2]-=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new Clown_obj(moving_width[3], really_height+200, "/alien" + "1"+ ".png"));
+			moving.add(new Clown_obj(moving_width[3], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			moving_width[3]-=55;
 		}
 	}
@@ -125,7 +124,7 @@ public class Clown_world implements World {
 						m.setY(really_height);
 						m.setX(wid-450);
 						moving.remove(0);
-						moving.add(6, new Clown_obj(moving_width[0], really_height, "/alien" + "1"+ ".png"));
+						moving.add(6, new Clown_obj(moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
 						moving.get(6).setX(width-115);
 			}
 			if(intersect(m3, fighter)) {	
@@ -137,7 +136,7 @@ public class Clown_world implements World {
 						m3.setY(really_height);
 						m3.setX(350);
 						moving.remove(14);
-						moving.add(20, new Clown_obj(moving_width[2], really_height, "/alien" + "1"+ ".png"));
+						moving.add(20, new Clown_obj(moving_width[2], really_height, "/dish" +(int)(1 + Math.random() * 2)+ ".png"));
 						moving.get(20).setX(20);
 			}
 			if(intersect(m2, fighter)) {	
@@ -151,7 +150,7 @@ public class Clown_world implements World {
 				m2.setY(really_height+200);
 				m2.setX(wid2-350);
 				moving.remove(7);
-				moving.add(13,new Clown_obj(moving_width[1], really_height+200, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+				moving.add(13,new Clown_obj(moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
 				moving.get(moving.size()-1).setX(width-20);
 			}
 			if(intersect(m4, fighter)) {	
@@ -165,7 +164,7 @@ public class Clown_world implements World {
 				m4.setY(really_height+200);
 				m4.setX(250);
 				moving.remove(21);
-				moving.add(27,new Clown_obj(moving_width[3], really_height+200, "/alien" + "1"+ ".png"));
+				moving.add(27,new Clown_obj(moving_width[3], really_height+200, "/dish" +(int)(1 + Math.random() * 2)+ ".png"));
 				moving.get(moving.size()-1).setX(20);
 				
 			}
