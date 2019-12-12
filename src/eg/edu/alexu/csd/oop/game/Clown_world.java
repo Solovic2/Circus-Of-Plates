@@ -29,22 +29,22 @@ public class Clown_world implements World {
 		moving_width[2]=(350);
 		moving_width[3]=(250);
 		// control objects (fighter)
-		control.add(new ImageObject(screenWidth/2, (int)(screenHeight*0.8), "/spaceship.png"));
+		control.add(new Clown_obj(screenWidth/2, (int)(screenHeight*0.8), "/spaceship.png"));
 		// moving objects (aliens)
 		for(int i=0; i <7; i++) {
-			moving.add(new ImageObject(moving_width[0], really_height, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+			moving.add(new Clown_obj(moving_width[0], really_height, "/alien" +"1"+ ".png"));
 			moving_width[0]+=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new ImageObject(moving_width[1], really_height+200, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+			moving.add(new Clown_obj(moving_width[1], really_height+200, "/alien" + "1"+ ".png"));
 			moving_width[1]+=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new ImageObject(moving_width[2], really_height, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+			moving.add(new Clown_obj(moving_width[2], really_height, "/alien" + "1"+ ".png"));
 			moving_width[2]-=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new ImageObject(moving_width[3], really_height+200, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+			moving.add(new Clown_obj(moving_width[3], really_height+200, "/alien" + "1"+ ".png"));
 			moving_width[3]-=55;
 		}
 	}
@@ -84,7 +84,7 @@ public class Clown_world implements World {
 	@Override
 	public boolean refresh() {
 		boolean timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
-		ImageObject fighter = (ImageObject)control.get(0);
+		Clown_obj fighter = (Clown_obj)control.get(0);
 		int wid=width;
 		int wid2=width;
 		moving_width[0]=width-450;
@@ -116,25 +116,47 @@ public class Clown_world implements World {
 					moving_width[2]-=55;
 				}
 			}
-			if(m.getY()==getHeight()){
+			if(intersect(m, fighter)) {	
+				System.out.println("m");
+			} 
+			else if(m.getY()==getHeight()){
 				// reuse the star in another position
 						m.setY(really_height);
 						m.setX(wid-450);
 						moving.remove(0);
-						moving.add(6, new ImageObject(moving_width[0], really_height, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+						moving.add(6, new Clown_obj(moving_width[0], really_height, "/alien" + "1"+ ".png"));
 						moving.get(6).setX(width-115);
+			}
+			if(intersect(m3, fighter)) {	
+				System.out.println("m3");
+			} 
+			else if(m3.getY()==getHeight())
+			{
 					/* m3 */
 						m3.setY(really_height);
 						m3.setX(350);
 						moving.remove(14);
-						moving.add(20, new ImageObject(moving_width[2], really_height, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+						moving.add(20, new Clown_obj(moving_width[2], really_height, "/alien" + "1"+ ".png"));
 						moving.get(20).setX(20);
 			}
-			if(m2.getY()==getHeight()) {
+			if(intersect(m2, fighter)) {	
+				System.out.println("m2");
+			} 
+			else if(m2.getY()==getHeight()) {
 				for(int j=8;j<14;j++) {
 					moving.get(j).setX(moving_width[1]);
 					moving_width[1]+=55;
 				}
+				m2.setY(really_height+200);
+				m2.setX(wid2-350);
+				moving.remove(7);
+				moving.add(13,new Clown_obj(moving_width[1], really_height+200, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+				moving.get(moving.size()-1).setX(width-20);
+			}
+			if(intersect(m4, fighter)) {	
+				System.out.println("m4");
+			} 
+			else if(m4.getY()==getHeight()){
 				for(int j=22;j<28;j++) {
 					moving.get(j).setX(moving_width[3]);
 					moving_width[3]-=55;
@@ -142,18 +164,15 @@ public class Clown_world implements World {
 				m4.setY(really_height+200);
 				m4.setX(250);
 				moving.remove(21);
-				moving.add(27,new ImageObject(moving_width[3], really_height+200, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
+				moving.add(27,new Clown_obj(moving_width[3], really_height+200, "/alien" + "1"+ ".png"));
 				moving.get(moving.size()-1).setX(20);
-				m2.setY(really_height+200);
-				m2.setX(wid2-350);
-				moving.remove(7);
-				moving.add(13,new ImageObject(moving_width[1], really_height+200, "/alien" + (int)(1 + Math.random() * 2)+ ".png"));
-				moving.get(moving.size()-1).setX(width-20);
+				
 			}
 //			m.setX(m.getX() + (Math.random() > 0.5 ? 1 : -1));
 //			if(!timeout & intersect(m, fighter)) {
 ////				((ImageObject)m).setVisible(false);
 //				score = Math.max(0, score-10);	
+//				System.out.println("gghghgh");
 //			}
 		}
 		return !timeout;
