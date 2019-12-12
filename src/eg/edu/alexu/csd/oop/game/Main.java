@@ -53,11 +53,11 @@ public class Main {
 		menu.add(pauseMenuItem);
 		menu.add(resumeMenuItem);
 		menuBar.add(menu);
-		final GameController gameController = GameEngine.start("Very Simple Game in 99 Line of Code", new Clown_world(400, 700), menuBar, Color.black
+		final GameController gameController = GameEngine.start("Very Simple Game in 99 Line of Code", new Clown_world(1000, 700), menuBar, Color.black
 				);
 		newMenuItem.addActionListener(new ActionListener() {
 		@Override public void actionPerformed(ActionEvent e) {
-				gameController.changeWorld(new Clown_world(400, 700));
+				gameController.changeWorld(new Clown_world(1000, 700));
 			}
 		});
 		pauseMenuItem.addActionListener(new ActionListener() {
