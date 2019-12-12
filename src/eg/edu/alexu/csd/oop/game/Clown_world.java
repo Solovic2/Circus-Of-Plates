@@ -30,6 +30,7 @@ public class Clown_world implements World {
 		moving_width[3]=(250);
 		// control objects (fighter)
 		control.add(new Clown_obj(screenWidth/2, (int)(screenHeight*0.8), "/Clown.png"));
+		control.add(new Clown_obj(screenWidth/2, (int)(screenHeight*0.8), "/spaceship.png"));
 		// moving objects (aliens)
 		for(int i=0; i <7; i++) {
 			moving.add(new Clown_obj(moving_width[0], really_height, "/alien" +"1"+ ".png"));
