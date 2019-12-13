@@ -10,18 +10,23 @@ public class Clown_obj implements GameObject {
 	private int x;
 	private int y;
 	private boolean visible;
+	private int type;
+	private String mypath;
 	
 	public Clown_obj(int posX, int posY, String path){
-		this(posX, posY, path, 0);
+		this(posX, posY, path, 1);
+		
 	}
 	
 	public Clown_obj(int posX, int posY, String path, int type){
 		this.x = posX;
 		this.y = posY;
 		this.visible = true;
+		this.type=type;
 		// create a bunch of buffered images and place into an array, to be displayed sequentially
 		try {
 			spriteImages[0] = ImageIO.read(getClass().getResourceAsStream(path));
+			mypath=path;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -44,6 +49,7 @@ public class Clown_obj implements GameObject {
 
 	@Override
 	public void setY(int mY) {
+		if(type!=0)
 		this.y = mY;
 	}
 
@@ -66,6 +72,9 @@ public class Clown_obj implements GameObject {
 	public boolean isVisible() {
 		return visible;
 	}
-	
-
+	public String getpath() {
+		String sub=mypath.substring(1,6);
+		System.out.println(sub);
+		return sub;
+	}
 }
