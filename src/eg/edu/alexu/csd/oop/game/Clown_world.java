@@ -15,7 +15,10 @@ public class Clown_world implements World {
 	private final List<GameObject> constant = new LinkedList<GameObject>();
 	private final List<GameObject> moving = new ArrayList<GameObject>();
 	private final List<GameObject> control = new LinkedList<GameObject>();
-	private final Stack<Clown_obj> isfilled=new Stack<Clown_obj>();
+	private final Stack<Obj> isfilled=new Stack<Obj>();
+	private final objFactory factory=objFactory.get_instance();
+	
+	
 	public Clown_world(int screenWidth, int screenHeight) {
 		width = screenWidth;
 		height = screenHeight;
@@ -25,22 +28,22 @@ public class Clown_world implements World {
 		moving_width[2]=(350);
 		moving_width[3]=(300);
 		// control objects (fighter)
-		control.add(new Clown_obj(screenWidth/2, (int)(screenHeight*0.8), "/Clown.png",0));
+		control.add( factory.createObj("clown",screenWidth/2, (int)(screenHeight*0.8), "/Clown.png"));
 		// moving objects (aliens)
 		for(int i=0; i <7; i++) {
-			moving.add(new Clown_obj(moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
+			moving.add(factory.createObj("dish",moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			moving_width[0]+=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new Clown_obj(moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
+			moving.add(factory.createObj("dish",moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			moving_width[1]+=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new Clown_obj(moving_width[2], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
+			moving.add(factory.createObj("dish",moving_width[2], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			moving_width[2]-=55;
 		}
 		for(int i=0; i <7; i++) {
-			moving.add(new Clown_obj(moving_width[3], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
+			moving.add(factory.createObj("dish",moving_width[3], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			moving_width[3]-=55;
 		}
 	}
@@ -79,7 +82,7 @@ public class Clown_world implements World {
 	@Override
 	public boolean refresh() {
 		boolean timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
-		Clown_obj fighter = (Clown_obj)control.get(0);
+		Obj fighter = (Obj)control.get(0);
 		int wid=width;
 		int wid2=width;
 		moving_width[0]=width-450;
@@ -124,7 +127,7 @@ public class Clown_world implements World {
 						m.setY(really_height);
 						m.setX(wid-450);
 						moving.remove(0);
-						moving.add(6, new Clown_obj(moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
+						moving.add(6,factory.createObj("dish",moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
 						moving.get(6).setX(width-115);
 			}
 			if(intersect(m3, control.get(control.size()-1)) || intersect(m3, fighter)) {	
@@ -136,7 +139,7 @@ public class Clown_world implements World {
 						m3.setY(really_height);
 						m3.setX(350);
 						moving.remove(14);
-						moving.add(20, new Clown_obj(moving_width[2], really_height, "/dish" +(int)(1 + Math.random() * 2)+ ".png"));
+						moving.add(20,factory.createObj("dish",moving_width[2], really_height, "/dish" +(int)(1 + Math.random() * 2)+ ".png"));
 						moving.get(20).setX(20);
 			}
 			if(intersect(m2, control.get(control.size()-1)) || intersect(m2, fighter)) {	
@@ -155,7 +158,7 @@ public class Clown_world implements World {
 				m2.setY(really_height+200);
 				m2.setX(wid2-350);
 				moving.remove(7);
-				moving.add(13,new Clown_obj(moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
+				moving.add(13,factory.createObj("dish",moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
 				moving.get(13).setX(width-20);
 			}
 			if(intersect(m4, control.get(control.size()-1)) || intersect(m4, fighter)) {	
@@ -174,7 +177,7 @@ public class Clown_world implements World {
 				m4.setY(really_height+200);
 				m4.setX(300);
 				moving.remove(21);
-				moving.add(27,new Clown_obj(moving_width[3], really_height+200, "/dish" +(int)(1 + Math.random() * 2)+ ".png"));
+				moving.add(27,factory.createObj("dish",moving_width[3], really_height+200, "/dish" +(int)(1 + Math.random() * 2)+ ".png"));
 				moving.get(27).setX(-25);
 				
 			}
@@ -206,23 +209,27 @@ public class Clown_world implements World {
 		// TODO Auto-generated method stub
 		return 20;
 	}
-	public void collect_score(GameObject m,Clown_obj fighter,int first,int last,int forwidth) {
+	public void collect_score(GameObject m,Obj fighter,int first,int last,int forwidth) {
 		m.setX(fighter.getX());
-		isfilled.add((Clown_obj) m);
+		isfilled.add((Obj) m);
 		
 		if(isfilled.size()==1) {
 			m.setY(fighter.getY()-40);
+			isfilled.get(isfilled.size()-1).setMovingUp(false);
 			control.add(m);
 		}else if(isfilled.size()==2) {
 			if(isfilled.get(0).getpath().equals(isfilled.get(1).getpath())) {
 				m.setY(fighter.getY()-80);
+				isfilled.get(isfilled.size()-1).setMovingUp(false);
 				control.add(m);
 			}
 			else {
 				control.remove(control.size()-1);	
 				control.add(m);
 				isfilled.remove(0);
+				isfilled.get(0).setMovingUp(true);
 				isfilled.get(0).setY(fighter.getY()-40);
+				isfilled.get(0).setMovingUp(false);
 			}
 		}else if(isfilled.size()==3) {
 			if(isfilled.get(1).getpath().equals(isfilled.get(2).getpath())) {
@@ -237,14 +244,16 @@ public class Clown_world implements World {
 				control.add(m);
 					isfilled.remove(0);
 					isfilled.remove(0);
+					isfilled.get(0).setMovingUp(true);
 					isfilled.get(0).setY(fighter.getY()-40);
+					isfilled.get(0).setMovingUp(false);
 				}					
 		}
 
 		int w;		
 		moving.remove(first);
 		if(first==7||first==21) {
-			moving.add(last, new Clown_obj(moving_width[forwidth], really_height+200, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
+			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height+200, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
 			if(first==7) {
 				w=width-20;
 			}else {
@@ -252,7 +261,7 @@ public class Clown_world implements World {
 			}
 			moving.get(last).setX(w);
 			}else{
-			moving.add(last, new Clown_obj(moving_width[forwidth], really_height, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
+			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
 			if(first==0) {
 				w=width-115;
 			}else {
