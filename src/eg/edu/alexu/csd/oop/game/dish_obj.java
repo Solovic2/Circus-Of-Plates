@@ -6,7 +6,15 @@ public class dish_obj extends Obj {
 		super(posX, posY, path, true);
 	}
 
+	public String getpath() {
+		String sub=mypath.substring(1,6);
+		System.out.println(sub);
+		return sub;
+	}
 
+	public void setMovingUp(boolean movingUp) {
+		this.movingUp = movingUp;
+	}
 
 	
 

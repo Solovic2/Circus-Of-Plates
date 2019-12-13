@@ -15,7 +15,7 @@ public class Clown_world implements World {
 	private final List<GameObject> constant = new LinkedList<GameObject>();
 	private final List<GameObject> moving = new ArrayList<GameObject>();
 	private final List<GameObject> control = new LinkedList<GameObject>();
-	private final Stack<Obj> isfilled=new Stack<Obj>();
+	private final Stack<dish_obj> isfilled=new Stack<dish_obj>();
 	private final objFactory factory=objFactory.get_instance();
 	
 	
@@ -211,7 +211,7 @@ public class Clown_world implements World {
 	}
 	public void collect_score(GameObject m,Obj fighter,int first,int last,int forwidth) {
 		m.setX(fighter.getX());
-		isfilled.add((Obj) m);
+		isfilled.add((dish_obj) m);
 		
 		if(isfilled.size()==1) {
 			m.setY(fighter.getY()-40);

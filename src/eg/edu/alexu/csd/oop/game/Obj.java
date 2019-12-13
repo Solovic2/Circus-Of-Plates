@@ -10,8 +10,8 @@ public abstract class Obj implements GameObject {
 	private int x;
 	private int y;
 	private boolean visible;
-	private boolean movingUp;
-	private String mypath;
+	protected boolean movingUp;
+	protected String mypath;
 	
 
 	public Obj(int posX, int posY, String path, boolean type){
@@ -49,9 +49,6 @@ public abstract class Obj implements GameObject {
 		this.y = mY;
 	}
 
-	public void setMovingUp(boolean movingUp) {
-		this.movingUp = movingUp;
-	}
 
 	@Override
 	public BufferedImage[] getSpriteImages() {
@@ -72,9 +69,5 @@ public abstract class Obj implements GameObject {
 	public boolean isVisible() {
 		return visible;
 	}
-	public String getpath() {
-		String sub=mypath.substring(1,6);
-		System.out.println(sub);
-		return sub;
-	}
+	
 }
