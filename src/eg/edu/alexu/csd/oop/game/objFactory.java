@@ -2,6 +2,8 @@ package eg.edu.alexu.csd.oop.game;
 
 public class objFactory {
 	
+	clown_information dish;
+	
     /********************************Singleton Design Pattern********************************/
   private static objFactory instance = new objFactory();
  
@@ -16,9 +18,11 @@ public class objFactory {
 	public Obj createObj(String type,int posX, int posY, String path) {
 		
 		if(type.equals("clown")){
-			return new Clown_obj(posX,posY,path,false);
+			Clown_obj c=new Clown_obj(posX,posY,path,false);
+			return c;
 		}else if(type.equals("dish")) {
-			return new dish_obj(posX,posY,path,true);
+			dish_obj k=new dish_obj(posX,posY,path,true);
+			return  k;
 		}
 		return null;
 	}

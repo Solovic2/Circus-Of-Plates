@@ -1,11 +1,12 @@
 package eg.edu.alexu.csd.oop.game;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
 public class Clown_world implements World {
-	private static int MAX_TIME = 1 * 60 * 1000;	// 1 minute
+	private static int MAX_TIME = 1 * 60 * 10000;	// game time
 	private int score = 0;
 	private int really_height;
 	private int moving_width[]=new int[4];
@@ -15,20 +16,26 @@ public class Clown_world implements World {
 	private final List<GameObject> constant = new LinkedList<GameObject>();
 	private final List<GameObject> moving = new ArrayList<GameObject>();
 	private final List<GameObject> control = new LinkedList<GameObject>();
-	private final Stack<dish_obj> isfilled=new Stack<dish_obj>();
+	private final Stack<dish_obj> filledRight=new Stack<dish_obj>();
+	private final Stack<dish_obj> filledLeft=new Stack<dish_obj>();
+
+	
 	private final objFactory factory=objFactory.get_instance();
-	
-	
+	clown_information subject=new clown_information();
+	boolean timeout;
 	public Clown_world(int screenWidth, int screenHeight) {
+		
 		width = screenWidth;
 		height = screenHeight;
 		really_height=height-700;
 		moving_width[0]=(width-450);
 		moving_width[1]=(width-350);
 		moving_width[2]=(350);
-		moving_width[3]=(300);
+		moving_width[3]=(300);	
 		// control objects (fighter)
 		control.add( factory.createObj("clown",screenWidth/2, (int)(screenHeight*0.8), "/Clown.png"));
+		control.add(factory.createObj("clown",screenWidth/2-20, (int)(screenHeight*0.8)+10, "/line.png"));
+		control.add(factory.createObj("clown",screenWidth/2+80, (int)(screenHeight*0.8), "/line.png"));
 		// moving objects (aliens)
 		for(int i=0; i <7; i++) {
 			moving.add(factory.createObj("dish",moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
@@ -81,8 +88,9 @@ public class Clown_world implements World {
 	}
 	@Override
 	public boolean refresh() {
-		boolean timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
+	    timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
 		Obj fighter = (Obj)control.get(0);
+		subject.setXY(fighter.getX(),fighter.getY());
 		int wid=width;
 		int wid2=width;
 		moving_width[0]=width-450;
@@ -114,43 +122,90 @@ public class Clown_world implements World {
 					moving_width[2]-=55;
 				}
 			}
-			
-			if(intersect(m, control.get(control.size()-1)) || intersect(m, fighter)) {
+			if((filledLeft.size()!=0)) {
+				if(intersect(m,filledLeft.get(filledLeft.size()-1))) {
+					collect_score(filledLeft,0,m,fighter,0,6,0);
+				}else {}
+			}if(filledRight.size()!=0) {
+				if(intersect(m,filledRight.get(filledRight.size()-1))) {
+					 collect_score( filledRight,1,m,fighter,0,6,0);
+				}else {}
+			}
+			if(intersect(m, control.get(2))) {
+				collect_score(filledRight,1,m,fighter,0,6,0);
+			}if(intersect(m, control.get(1))) {
 				// i make it for last plate only 
 				//
 				//here i make it subset of controler
-				collect_score(m,fighter,0,6,0);
+				collect_score(filledLeft,0,m,fighter,0,6,0);
 
 			}
-			else if(m.getY()==getHeight()){
+			if(m.getY()==getHeight()){
 				// reuse the star in another position
 						m.setY(really_height);
 						m.setX(wid-450);
 						moving.remove(0);
-						moving.add(6,factory.createObj("dish",moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
+						moving.add(6,factory.createObj("dish",moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 						moving.get(6).setX(width-115);
 			}
-			if(intersect(m3, control.get(control.size()-1)) || intersect(m3, fighter)) {	
-				collect_score(m3,fighter,14,20,2);
+			/********************************m3**********************************/
+			if((filledLeft.size()!=0)) {
+				if(intersect(m3,filledLeft.get(filledLeft.size()-1))) {
+					collect_score(filledLeft,0,m3,fighter,14,20,2);
+				}else {}
+			}if(filledRight.size()!=0) {
+				if(intersect(m3,filledRight.get(filledRight.size()-1))) {
+					 collect_score( filledRight,1,m3,fighter,14,20,2);
+				}else {}
+			}
+			if(intersect(m3, control.get(2))) {
+				collect_score(filledRight,1,m3,fighter,14,20,2);
+			}if(intersect(m3,control.get(1))) {	
+				collect_score(filledLeft,0,m3,fighter,14,20,2);
 			} 
-			else if(m3.getY()==getHeight())
+			if(m3.getY()==getHeight())
 			{
 					/* m3 */
 						m3.setY(really_height);
 						m3.setX(350);
 						moving.remove(14);
-						moving.add(20,factory.createObj("dish",moving_width[2], really_height, "/dish" +(int)(1 + Math.random() * 2)+ ".png"));
+						moving.add(20,factory.createObj("dish",moving_width[2], really_height, "/dish" +(int)(1 + Math.random() * 7)+ ".png"));
 						moving.get(20).setX(20);
 			}
-			if(intersect(m2, control.get(control.size()-1)) || intersect(m2, fighter)) {	
+			/**************************************m2*********************************/
+			if((filledLeft.size()!=0)) {
+				if(intersect(m2,filledLeft.get(filledLeft.size()-1))) {
+					for(int j=8;j<14;j++) {
+						moving.get(j).setX(moving_width[1]);
+						moving_width[1]+=55;
+					}
+					collect_score(filledLeft,0,m2,fighter,7,13,1);
+				}else {}
+			}if(filledRight.size()!=0) {
+				if(intersect(m2,filledRight.get(filledRight.size()-1))) {
+					for(int j=8;j<14;j++) {
+						moving.get(j).setX(moving_width[1]);
+						moving_width[1]+=55;
+					}
+					 collect_score( filledRight,1,m2,fighter,7,13,1);
+				}else {}
+			}
+			if(intersect(m2, control.get(2))) {
 				for(int j=8;j<14;j++) {
 					moving.get(j).setX(moving_width[1]);
 					moving_width[1]+=55;
 				}
-				collect_score(m2,fighter,7,13,1);
+				collect_score(filledRight,1,m2,fighter,7,13,1);
+			}
+			if(intersect(m2, control.get(1))) {	
+				for(int j=8;j<14;j++) {
+					moving.get(j).setX(moving_width[1]);
+					moving_width[1]+=55;
+				}
+				collect_score(filledLeft,0,m2,fighter,7,13,1);
 				
 			} 
-			else if(m2.getY()==getHeight()) {
+			if(m2.getY()==getHeight()) {
 				for(int j=8;j<14;j++) {
 					moving.get(j).setX(moving_width[1]);
 					moving_width[1]+=55;
@@ -158,18 +213,43 @@ public class Clown_world implements World {
 				m2.setY(really_height+200);
 				m2.setX(wid2-350);
 				moving.remove(7);
-				moving.add(13,factory.createObj("dish",moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
+				moving.add(13,factory.createObj("dish",moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 				moving.get(13).setX(width-20);
 			}
-			if(intersect(m4, control.get(control.size()-1)) || intersect(m4, fighter)) {	
+			/****************************m4**************************************************/
+			if((filledLeft.size()!=0)) {
+				if(intersect(m4,filledLeft.get(filledLeft.size()-1))) {
+					for(int j=22;j<28;j++) {
+						moving.get(j).setX(moving_width[3]);
+						moving_width[3]-=55;
+					}
+					collect_score(filledLeft,0,m4,fighter,21,27,3);
+				}else {}
+			}if(filledRight.size()!=0) {
+				if(intersect(m4,filledRight.get(filledRight.size()-1))) {
+					for(int j=22;j<28;j++) {
+						moving.get(j).setX(moving_width[3]);
+						moving_width[3]-=55;
+					}
+					 collect_score( filledRight,1,m4,fighter,21,27,3);
+				}else {}
+			}
+			if(intersect(m4, control.get(2))) {
 				for(int j=22;j<28;j++) {
 					moving.get(j).setX(moving_width[3]);
 					moving_width[3]-=55;
 				}
-				collect_score(m4,fighter,21,27,3);
+				collect_score(filledRight,1,m4,fighter,21,27,3);
+			}
+			if(intersect(m4, control.get(1))) {	
+				for(int j=22;j<28;j++) {
+					moving.get(j).setX(moving_width[3]);
+					moving_width[3]-=55;
+				}
+				collect_score(filledLeft,0,m4,fighter,21,27,3);
 
 			} 
-			else if(m4.getY()==getHeight()){
+			if(m4.getY()==getHeight()){
 				for(int j=22;j<28;j++) {
 					moving.get(j).setX(moving_width[3]);
 					moving_width[3]-=55;
@@ -177,16 +257,10 @@ public class Clown_world implements World {
 				m4.setY(really_height+200);
 				m4.setX(300);
 				moving.remove(21);
-				moving.add(27,factory.createObj("dish",moving_width[3], really_height+200, "/dish" +(int)(1 + Math.random() * 2)+ ".png"));
+				moving.add(27,factory.createObj("dish",moving_width[3], really_height+200, "/dish" +(int)(1 + Math.random() * 7)+ ".png"));
 				moving.get(27).setX(-25);
 				
 			}
-//			m.setX(m.getX() + (Math.random() > 0.5 ? 1 : -1));
-//			if(!timeout & intersect(m, fighter)) {
-////				((ImageObject)m).setVisible(false);
-//				score = Math.max(0, score-10);	
-//				System.out.println("gghghgh");
-//			}
 		}
 		return !timeout;
 	
@@ -209,51 +283,39 @@ public class Clown_world implements World {
 		// TODO Auto-generated method stub
 		return 20;
 	}
-	public void collect_score(GameObject m,Obj fighter,int first,int last,int forwidth) {
-		m.setX(fighter.getX());
-		isfilled.add((dish_obj) m);
+	public void collect_score(Stack<dish_obj> filled,int where,GameObject m,Obj fighter,int first,int last,int forwidth) {
+		if(where==0) {
+			m.setX(fighter.getX()-20);
+		}else if(where==1) {
+			m.setX(fighter.getX()+80);
+		}
+		filled.add((dish_obj) m);
 		
-		if(isfilled.size()==1) {
-			m.setY(fighter.getY()-40);
-			isfilled.get(isfilled.size()-1).setMovingUp(false);
+		if(filled.size()<=2) {
+			m.setY(fighter.getY()-filled.size()*40);
+			filled.get(filled.size()-1).setMovingUp(false);
 			control.add(m);
-		}else if(isfilled.size()==2) {
-			if(isfilled.get(0).getpath().equals(isfilled.get(1).getpath())) {
-				m.setY(fighter.getY()-80);
-				isfilled.get(isfilled.size()-1).setMovingUp(false);
+		}else if(filled.size()>=3&&filled.size()<7) {
+			if(compare(filled)) {
+			}else {
+				m.setY(fighter.getY()-filled.size()*40);
+				filled.get(filled.size()-1).setMovingUp(false);
 				control.add(m);
 			}
-			else {
-				control.remove(control.size()-1);	
+		}else if(filled.size()==7) {
+			if(compare(filled)) {
+			}else {
+				m.setY(fighter.getY()-filled.size()*40);
+				filled.get(filled.size()-1).setMovingUp(false);
 				control.add(m);
-				isfilled.remove(0);
-				isfilled.get(0).setMovingUp(true);
-				isfilled.get(0).setY(fighter.getY()-40);
-				isfilled.get(0).setMovingUp(false);
+				timeout=true;
 			}
-		}else if(isfilled.size()==3) {
-			if(isfilled.get(1).getpath().equals(isfilled.get(2).getpath())) {
-				isfilled.removeAllElements();
-				control.remove(control.size()-1);
-				control.remove(control.size()-1);
-				score+=10;
-			}
-			else {
-				control.remove(control.size()-1);
-				control.remove(control.size()-1);
-				control.add(m);
-					isfilled.remove(0);
-					isfilled.remove(0);
-					isfilled.get(0).setMovingUp(true);
-					isfilled.get(0).setY(fighter.getY()-40);
-					isfilled.get(0).setMovingUp(false);
-				}					
 		}
 
 		int w;		
 		moving.remove(first);
 		if(first==7||first==21) {
-			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height+200, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
+			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			if(first==7) {
 				w=width-20;
 			}else {
@@ -261,7 +323,7 @@ public class Clown_world implements World {
 			}
 			moving.get(last).setX(w);
 			}else{
-			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height, "/dish" + (int)(1 + Math.random() * 2)+ ".png"));
+			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			if(first==0) {
 				w=width-115;
 			}else {
@@ -269,7 +331,19 @@ public class Clown_world implements World {
 				}
 				moving.get(last).setX(w);
 		}
+	}
+	public boolean compare(Stack<dish_obj> filled) {
+		if(filled.get(filled.size()-1).getpath().equals(filled.get(filled.size()-2).getpath())&&filled.get(filled.size()-2).getpath().equals(filled.get(filled.size()-3).getpath())) {
+			filled.remove(filled.size()-1);
+			control.remove(filled.get(filled.size()-1));
+			control.remove(filled.get(filled.size()-2));
+			filled.remove(filled.size()-1);
+			filled.remove(filled.size()-1);
 			
+			score+=10;
+			return true;
+		}
+		return false;
 	}
 
 }

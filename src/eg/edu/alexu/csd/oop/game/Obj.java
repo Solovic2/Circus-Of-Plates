@@ -3,8 +3,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public abstract class Obj implements GameObject {
+public abstract class Obj implements GameObject  {
 	private static final int MAX_MSTATE = 1;
+	private  clown_information subjects=null;
 	// an array of sprite images that are drawn sequentially
 	private BufferedImage[] spriteImages = new BufferedImage[MAX_MSTATE];
 	private int x;
@@ -12,6 +13,7 @@ public abstract class Obj implements GameObject {
 	private boolean visible;
 	protected boolean movingUp;
 	protected String mypath;
+//	private clown_information subject;
 	
 
 	public Obj(int posX, int posY, String path, boolean type){
@@ -19,6 +21,8 @@ public abstract class Obj implements GameObject {
 		this.y = posY;
 		this.visible = true;
 		this.movingUp=type;
+//		this.subjects=subject;
+		
 		// create a bunch of buffered images and place into an array, to be displayed sequentially
 		try {
 			spriteImages[0] = ImageIO.read(getClass().getResourceAsStream(path));
@@ -35,7 +39,9 @@ public abstract class Obj implements GameObject {
 
 	@Override
 	public void setX(int mX) {
+		if(mX==1000-120 )return;
 		this.x = mX;
+		
 	}
 
 	@Override
