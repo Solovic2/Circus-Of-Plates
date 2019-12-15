@@ -18,6 +18,9 @@ public class dish_obj extends Obj implements Update_axis {
 	public boolean intersectLeft(){
 		return (Math.abs((this.getX()+this.getWidth()/2) - (leftX+60/2)) <= this.getWidth()) && (Math.abs((this.getY()+this.getHeight()/2) - (570+6/2)) <= this.getHeight());
 	}
+	public boolean intersectRight(){
+		return (Math.abs((this.getX()+this.getWidth()/2) - (rightX+60/2)) <= this.getWidth()) && (Math.abs((this.getY()+this.getHeight()/2) - (560+6/2)) <= this.getHeight());
+	}
 	@Override
 	public void updatex( picker_left subject) {
 		this.leftX=subject.getPos();
