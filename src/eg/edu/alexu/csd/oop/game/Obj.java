@@ -8,7 +8,7 @@ public abstract class Obj implements GameObject  {
 	private  clown_information subjects=null;
 	// an array of sprite images that are drawn sequentially
 	private BufferedImage[] spriteImages = new BufferedImage[MAX_MSTATE];
-	private int x;
+	protected int x;
 	private int y;
 	private boolean visible;
 	protected boolean movingUp;

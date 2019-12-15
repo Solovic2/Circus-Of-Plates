@@ -33,8 +33,9 @@ public class Clown_world implements World {
 		moving_width[3]=(300);	
 		// control objects (fighter)
 		control.add( factory.createObj("clown",screenWidth/2, (int)(screenHeight*0.8), "/Clown.png"));
-		control.add(factory.createObj("clown",screenWidth/2-20, (int)(screenHeight*0.8)+10, "/line.png"));
-		control.add(factory.createObj("clown",screenWidth/2+80, (int)(screenHeight*0.8), "/line.png"));
+		control.add(factory.createObj("pickerLift",screenWidth/2-20, (int)(screenHeight*0.8)+10, "/line.png"));
+		System.out.println("left y "+((int)(screenHeight*0.8)+10));
+		control.add(factory.createObj("pickerRight",screenWidth/2+80, (int)(screenHeight*0.8), "/line.png"));
 		// moving objects (aliens)
 //		for(int i=0; i <7; i++) {
 //			moving.add(factory.createObj("dish",moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
@@ -97,20 +98,30 @@ public class Clown_world implements World {
 	public boolean refresh() {
 	    timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
 		Obj fighter = (Obj)control.get(0);
-		subject.setXY(fighter.getX(),fighter.getY());
+		picker_left leftHand=(picker_left) control.get(1);
+		picker_right rightHand=(picker_right) control.get(2);
+//		subject.setXY(fighter.getX(),fighter.getY());
 		int wid=width;
 		int wid2=width;
 		moving_width[0]=width-450;
 		moving_width[1]=width-350;
 		moving_width[2]=(350);
 		moving_width[3]=(300);
+
 		for(int i=0;i<moving.size()/4;i++){ 
-			GameObject m =moving.get(i);
+			dish_obj m =(dish_obj) moving.get(i);
 			GameObject m2 =moving.get(i+7);
 			GameObject m3 =moving.get(i+14);
 			GameObject m4 =moving.get(i+21);
-				if(m==moving.get(0)) 
+			
+				if(m==moving.get(0)) {
 					m.setY(m.getY()+1);
+					if(!leftHand.observers.contains(m)) {
+						leftHand.attach((Update_axis) m);
+						rightHand.attach((Update_axis) m);
+					}
+					System.out.println("sdsdsd "+m.intersectLeft());
+				}
 				if(m2==moving.get(7)) {
 					m2.setY(m2.getY()+1);
 				}
