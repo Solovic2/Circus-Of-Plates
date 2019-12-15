@@ -1,32 +1,31 @@
 package eg.edu.alexu.csd.oop.game;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
-public abstract class Obj implements GameObject  {
+public class ImageObject implements GameObject{
 	private static final int MAX_MSTATE = 1;
-	private  clown_information subjects=null;
 	// an array of sprite images that are drawn sequentially
 	private BufferedImage[] spriteImages = new BufferedImage[MAX_MSTATE];
-	protected int x;
+	private int x;
 	private int y;
 	private boolean visible;
-	protected boolean movingUp;
-	protected String mypath;
-//	private clown_information subject;
+	private int type;
 	
-
-	public Obj(int posX, int posY, String path, boolean type){
+	public ImageObject(int posX, int posY, String path){
+		this(posX, posY, path, 0);
+	}
+	
+	public ImageObject(int posX, int posY, String path, int type){
 		this.x = posX;
 		this.y = posY;
+		this.type = type;
 		this.visible = true;
-		this.movingUp=type;
-//		this.subjects=subject;
-		
 		// create a bunch of buffered images and place into an array, to be displayed sequentially
 		try {
 			spriteImages[0] = ImageIO.read(getClass().getResourceAsStream(path));
-			mypath=path;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -39,9 +38,7 @@ public abstract class Obj implements GameObject  {
 
 	@Override
 	public void setX(int mX) {
-		if(mX==1000-120 )return;
 		this.x = mX;
-		
 	}
 
 	@Override
@@ -51,10 +48,8 @@ public abstract class Obj implements GameObject  {
 
 	@Override
 	public void setY(int mY) {
-		if(movingUp)
 		this.y = mY;
 	}
-
 
 	@Override
 	public BufferedImage[] getSpriteImages() {
@@ -74,6 +69,18 @@ public abstract class Obj implements GameObject  {
 	@Override
 	public boolean isVisible() {
 		return visible;
+	}
+	
+	public void setVisible(boolean visible){
+		this.visible = visible;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 	
 }
