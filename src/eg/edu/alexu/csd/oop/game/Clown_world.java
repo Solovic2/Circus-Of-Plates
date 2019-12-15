@@ -17,7 +17,8 @@ public class Clown_world implements World {
 	private final List<GameObject> control = new LinkedList<GameObject>();
 	private final Stack<dish_obj> filledRight=new Stack<dish_obj>();
 	private final Stack<dish_obj> filledLeft=new Stack<dish_obj>();
-
+	private picker_right rightHand;
+	private picker_left leftHand;
 	
 	private final objFactory factory=objFactory.get_instance();
 	clown_information subject=new clown_information();
@@ -34,8 +35,8 @@ public class Clown_world implements World {
 		// control objects (fighter)
 		control.add( factory.createObj("clown",screenWidth/2, (int)(screenHeight*0.8), "/Clown.png"));
 		control.add(factory.createObj("pickerLift",screenWidth/2-20, (int)(screenHeight*0.8)+10, "/line.png"));
-		System.out.println("left y "+((int)(screenHeight*0.8)+10));
 		control.add(factory.createObj("pickerRight",screenWidth/2+80, (int)(screenHeight*0.8), "/line.png"));
+
 		// moving objects (aliens)
 //		for(int i=0; i <7; i++) {
 //			moving.add(factory.createObj("dish",moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
@@ -98,8 +99,8 @@ public class Clown_world implements World {
 	public boolean refresh() {
 	    timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
 		Obj fighter = (Obj)control.get(0);
-		picker_left leftHand=(picker_left) control.get(1);
-		picker_right rightHand=(picker_right) control.get(2);
+		leftHand=(picker_left) control.get(1);
+		rightHand=(picker_right) control.get(2);
 //		subject.setXY(fighter.getX(),fighter.getY());
 		int wid=width;
 		int wid2=width;
@@ -110,9 +111,9 @@ public class Clown_world implements World {
 
 		for(int i=0;i<moving.size()/4;i++){ 
 			dish_obj m =(dish_obj) moving.get(i);
-			GameObject m2 =moving.get(i+7);
-			GameObject m3 =moving.get(i+14);
-			GameObject m4 =moving.get(i+21);
+			dish_obj m2 =(dish_obj)moving.get(i+7);
+			dish_obj m3 =(dish_obj)moving.get(i+14);
+			dish_obj m4 =(dish_obj)moving.get(i+21);
 			
 				if(m==moving.get(0)) {
 					m.setY(m.getY()+1);
@@ -120,14 +121,27 @@ public class Clown_world implements World {
 						leftHand.attach((Update_axis) m);
 						rightHand.attach((Update_axis) m);
 					}
-					System.out.println("sdsdsd "+m.intersectLeft());
+
 				}
 				if(m2==moving.get(7)) {
+					if(!leftHand.observers.contains(m2)) {
+						leftHand.attach((Update_axis) m2);
+						rightHand.attach((Update_axis) m2);
+					}
 					m2.setY(m2.getY()+1);
 				}
-				if(m3==moving.get(14)) 
-					m3.setY(m3.getY()+1);
+				if(m3==moving.get(14)) {
+					if(!leftHand.observers.contains(m3)) {
+						leftHand.attach((Update_axis) m3);
+						rightHand.attach((Update_axis) m3);
+					}
+					m3.setY(m3.getY() + 1);
+				}
 				if(m4==moving.get(21)) {
+					if(!leftHand.observers.contains(m4)) {
+						leftHand.attach((Update_axis) m4);
+						rightHand.attach((Update_axis) m4);
+					}
 						m4.setY(m4.getY()+1);	
 				}
 			if(m.getY()==getHeight()/2) {
@@ -155,9 +169,9 @@ public class Clown_world implements World {
 					 collect_score( filledRight,1,m,fighter,0,6,0);
 				}else {}
 			}
-			if(intersect(m, control.get(2))) {
+			if(m.intersectRight()) {
 				collect_score(filledRight,1,m,fighter,0,6,0);
-			}if(intersect(m, control.get(1))) {
+			}if(m.intersectLeft()) {
 				// i make it for last plate only 
 				//
 				//here i make it subset of controler
@@ -169,6 +183,10 @@ public class Clown_world implements World {
 						m.setY(really_height);
 						m.setX(wid-450);
 						moving.remove(0);
+						if(leftHand.observers.contains(m)){
+							leftHand.observers.remove(m);
+							rightHand.observers.remove(m);
+						}
 						moving.add(6,factory.createObj("dish",moving_width[0], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 						moving.get(6).setX(width-115);
 			}
@@ -182,9 +200,9 @@ public class Clown_world implements World {
 					 collect_score( filledRight,1,m3,fighter,14,20,2);
 				}else {}
 			}
-			if(intersect(m3, control.get(2))) {
+			if(m3.intersectRight()) {
 				collect_score(filledRight,1,m3,fighter,14,20,2);
-			}if(intersect(m3,control.get(1))) {	
+			}if(m3.intersectLeft()) {
 				collect_score(filledLeft,0,m3,fighter,14,20,2);
 			} 
 			if(m3.getY()==getHeight())
@@ -193,6 +211,10 @@ public class Clown_world implements World {
 						m3.setY(really_height);
 						m3.setX(350);
 						moving.remove(14);
+				if(leftHand.observers.contains(m3)){
+					leftHand.observers.remove(m3);
+					rightHand.observers.remove(m3);
+				}
 						moving.add(20,factory.createObj("dish",moving_width[2], really_height, "/dish" +(int)(1 + Math.random() * 7)+ ".png"));
 						moving.get(20).setX(20);
 			}
@@ -218,7 +240,7 @@ public class Clown_world implements World {
 					 collect_score( filledRight,1,m2,fighter,7,13,1);
 				}else {}
 			}
-			if(intersect(m2, control.get(2))) {
+			if(m2.intersectRight()) {
 //				for(int j=8;j<14;j++) {
 //					moving.get(j).setX(moving_width[1]);
 //					moving_width[1]+=55;
@@ -227,7 +249,7 @@ public class Clown_world implements World {
 				moving_width[1]=my_itrateor(moving,8,14,moving_width[1],55);
 				collect_score(filledRight,1,m2,fighter,7,13,1);
 			}
-			if(intersect(m2, control.get(1))) {	
+			if(m2.intersectLeft()) {
 //				for(int j=8;j<14;j++) {
 //					moving.get(j).setX(moving_width[1]);
 //					moving_width[1]+=55;
@@ -247,6 +269,10 @@ public class Clown_world implements World {
 				m2.setY(really_height+200);
 				m2.setX(wid2-350);
 				moving.remove(7);
+				if(leftHand.observers.contains(m2)){
+					leftHand.observers.remove(m2);
+					rightHand.observers.remove(m2);
+				}
 				moving.add(13,factory.createObj("dish",moving_width[1], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 				moving.get(13).setX(width-20);
 			}
@@ -272,7 +298,7 @@ public class Clown_world implements World {
 					 collect_score( filledRight,1,m4,fighter,21,27,3);
 				}else {}
 			}
-			if(intersect(m4, control.get(2))) {
+			if(m4.intersectRight()) {
 //				for(int j=22;j<28;j++) {
 //					moving.get(j).setX(moving_width[3]);
 //					moving_width[3]-=55;
@@ -281,7 +307,7 @@ public class Clown_world implements World {
 				moving_width[3]=my_itrateor(moving,22,28,moving_width[3],-55);
 				collect_score(filledRight,1,m4,fighter,21,27,3);
 			}
-			if(intersect(m4, control.get(1))) {	
+			if(m4.intersectLeft()) {
 //				for(int j=22;j<28;j++) {
 //					moving.get(j).setX(moving_width[3]);
 //					moving_width[3]-=55;
@@ -302,6 +328,10 @@ public class Clown_world implements World {
 				m4.setY(really_height+200);
 				m4.setX(300);
 				moving.remove(21);
+				if(leftHand.observers.contains(m4)){
+					leftHand.observers.remove(m4);
+					rightHand.observers.remove(m4);
+				}
 				moving.add(27,factory.createObj("dish",moving_width[3], really_height+200, "/dish" +(int)(1 + Math.random() * 7)+ ".png"));
 				moving.get(27).setX(-25);
 				
@@ -359,6 +389,10 @@ public class Clown_world implements World {
 
 		int w;		
 		moving.remove(first);
+		if(leftHand.observers.contains(m)){
+			leftHand.observers.remove(m);
+			rightHand.observers.remove(m);
+		}
 		if(first==7||first==21) {
 			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
 			if(first==7) {
