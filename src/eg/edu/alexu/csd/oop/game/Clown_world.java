@@ -17,6 +17,8 @@ public class Clown_world implements World {
 	private final List<GameObject> control = new LinkedList<GameObject>();
 	private final Stack<dish_obj> filledRight=new Stack<dish_obj>();
 	private final Stack<dish_obj> filledLeft=new Stack<dish_obj>();
+	private Caretaker caretaker = new Caretaker();
+	private Originator originator  = new Originator();
 	private picker_right rightHand;
 	private picker_left leftHand;
 	private final objFactory factory=objFactory.get_instance();
@@ -135,14 +137,10 @@ public class Clown_world implements World {
 /******************************************** Shift The Top_Left Corner **** m3 ************************************************************/
 				moving_width[2]=my_itrateor(moving,15,21,moving_width[2],-55);
 			}
-			if((filledLeft.size()!=0)) {
-				if(intersect(m,filledLeft.get(filledLeft.size()-1))) {
+			if((filledLeft.size()!=0)&&intersect(m,filledLeft.get(filledLeft.size()-1))) {
 					collect_score(filledLeft,0,m,fighter,0,6,0);
-				}
-			}else if(filledRight.size()!=0) {
-				if(intersect(m,filledRight.get(filledRight.size()-1))) {
+			}else if(filledRight.size()!=0&&intersect(m,filledRight.get(filledRight.size()-1))) {
 					 collect_score( filledRight,1,m,fighter,0,6,0);
-				}
 			} 
 			if(m.intersectRight()) {
 				collect_score(filledRight,1,m,fighter,0,6,0);
@@ -166,14 +164,10 @@ public class Clown_world implements World {
 						moving.get(6).setX(width-115);
 			}
 /*****************************************************************   m3   ********************************************************************/
-			if((filledLeft.size()!=0)) {
-				if(intersect(m3,filledLeft.get(filledLeft.size()-1))) {
+			if((filledLeft.size()!=0)&&intersect(m3,filledLeft.get(filledLeft.size()-1))) {
 					collect_score(filledLeft,0,m3,fighter,14,20,2);
-				}
-			}else if(filledRight.size()!=0) {
-				if(intersect(m3,filledRight.get(filledRight.size()-1))) {
+			}else if(filledRight.size()!=0&&intersect(m3,filledRight.get(filledRight.size()-1))) {
 					 collect_score( filledRight,1,m3,fighter,14,20,2);
-				}
 			}
 			if(m3.intersectRight()) {
 				collect_score(filledRight,1,m3,fighter,14,20,2);
@@ -194,18 +188,14 @@ public class Clown_world implements World {
 						moving.get(20).setX(20);
 			}
 /*****************************************************************   m2   ********************************************************************/
-			if((filledLeft.size()!=0)) {
-				if(intersect(m2,filledLeft.get(filledLeft.size()-1))) {
+			if((filledLeft.size()!=0)&&intersect(m2,filledLeft.get(filledLeft.size()-1))) {
 /******************************************** Shift The Down_Right Corner **** m2 ************************************************************/					
 					moving_width[1]=my_itrateor(moving,8,14,moving_width[1],55);
 					collect_score(filledLeft,0,m2,fighter,7,13,1);
-				}
-			}else if(filledRight.size()!=0) {
-				if(intersect(m2,filledRight.get(filledRight.size()-1))) {
+			}else if(filledRight.size()!=0&&intersect(m2,filledRight.get(filledRight.size()-1))) {
 /******************************************** Shift The Down_Right Corner **** m2 ************************************************************/					
 					moving_width[1]=my_itrateor(moving,8,14,moving_width[1],55);
 					 collect_score( filledRight,1,m2,fighter,7,13,1);
-				}
 			}
 			if(m2.intersectRight()) {
 /******************************************** Shift The Down_Right Corner **** m2 ************************************************************/									
@@ -232,18 +222,14 @@ public class Clown_world implements World {
 				moving.get(13).setX(width-20);
 			}
 /*****************************************************************   m4   ********************************************************************/
-			if((filledLeft.size()!=0)) {
-				if(intersect(m4,filledLeft.get(filledLeft.size()-1))) {
+			if((filledLeft.size()!=0)&&intersect(m4,filledLeft.get(filledLeft.size()-1))) {
 /******************************************** Shift The Down_left Corner **** m4 ************************************************************/					
 					moving_width[3]=my_itrateor(moving,22,28,moving_width[3],-55);
 					collect_score(filledLeft,0,m4,fighter,21,27,3);
-				}
-			}else if(filledRight.size()!=0) {
-				if(intersect(m4,filledRight.get(filledRight.size()-1))) {
+			}else if(filledRight.size()!=0&&intersect(m4,filledRight.get(filledRight.size()-1))) {
 /******************************************** Shift The Down_left Corner **** m4 ************************************************************/					
 					moving_width[3]=my_itrateor(moving,22,28,moving_width[3],-55);
 					 collect_score( filledRight,1,m4,fighter,21,27,3);
-				}
 			}
 			if(m4.intersectRight()) {
 /******************************************** Shift The Down_left Corner **** m4 ************************************************************/
@@ -293,13 +279,15 @@ public class Clown_world implements World {
 		return 20;
 	}
 	public void collect_score(Stack<dish_obj> filled,int where,GameObject m,Obj fighter,int first,int last,int forwidth) {
+		
 		if(where==0) {
 			m.setX(fighter.getX()-20);
 		}else if(where==1) {
 			m.setX(fighter.getX()+80);
 		}
 		filled.add((dish_obj) m);
-		
+		originator.setState((Obj) m);
+		caretaker.addMemento(originator.save());
 		if(filled.size()<=2) {
 			m.setY(fighter.getY()-filled.size()*40);
 			filled.get(filled.size()-1).setMovingUp(false);
@@ -326,7 +314,6 @@ public class Clown_world implements World {
 		if(leftHand.observers.contains(m)){
 			leftHand.observers.remove(m);
 			rightHand.observers.remove(m);
-			
 		}
 		if(first==7||first==21) {
 			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
@@ -348,9 +335,12 @@ public class Clown_world implements World {
 	}
 	public boolean compare(Stack<dish_obj> filled) {
 		if(filled.get(filled.size()-1).getpath().equals(filled.get(filled.size()-2).getpath())&&filled.get(filled.size()-2).getpath().equals(filled.get(filled.size()-3).getpath())) {
+			caretaker.removeMemento(filled.get(filled.size()-1));
 			filled.remove(filled.size()-1);
 			control.remove(filled.get(filled.size()-1));
 			control.remove(filled.get(filled.size()-2));
+			caretaker.removeMemento(filled.get(filled.size()-1));
+			caretaker.removeMemento(filled.get(filled.size()-2));
 			filled.remove(filled.size()-1);
 			filled.remove(filled.size()-1);
 			
@@ -358,6 +348,16 @@ public class Clown_world implements World {
 			return true;
 		}
 		return false;
+	}
+	public void undo() {
+		if(control.size()>3) {
+			Obj n=caretaker.getMemento();
+			if(filledLeft.contains(n)) {
+				filledLeft.remove(n);
+			}else {filledRight.remove(n);}
+			control.remove(n);
+			caretaker.removeMemento();
+		}
 	}
 	/************************* Generate Dishes ******************************************************************/
 	public int  generate_dishes(int width,int height,int counter) {
