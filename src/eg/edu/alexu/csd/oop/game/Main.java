@@ -3,9 +3,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 import eg.edu.alexu.csd.oop.game.GameEngine;
 import eg.edu.alexu.csd.oop.game.GameEngine.GameController;
@@ -14,7 +16,8 @@ public class Main {
 
 	static Clown_world clown;
 	static GameController gameController=null;
-	static Levels level=new level_one();
+	static level_Factory level_factory=new level_Factory();
+	static JFrame jframe;
 	public static void main(String[] args) {
 		System.out.println("Uncomment any of the lines in the Main to run a new game, Have Fun :)");
 
@@ -70,12 +73,13 @@ public class Main {
 		menuBar.add(Edit);
 		menuBar.add(menulevel);
 		
-		clown=new Clown_world(1000, 700,level);
-		 gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown , menuBar, Color.black
-				);
+		clown=new Clown_world(1000, 700);
+		 clown.setstate(level_factory.getFlyweight(1));
+		 gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown , menuBar,Color.black);
+		 jframe = (JFrame) SwingUtilities.getWindowAncestor(menuBar);
 		newMenuItem.addActionListener(new ActionListener() {
 		@Override public void actionPerformed(ActionEvent e) {
-			clown=new Clown_world(1000, 700,level);
+			clown=new Clown_world(1000, 700);
 				gameController.changeWorld(clown);
 			}
 		});
@@ -91,27 +95,31 @@ public class Main {
 		});
 		level1.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
-				    level=new level_one();
-				    clown=new Clown_world(1000, 700,level);
-				    gameController = GameEngine.start("Very Simple Game in 99 Line of Code", clown, menuBar, Color.black
-							);
+					jframe.dispose();
+					clown=new Clown_world(1000, 700);
+				    clown.setstate(level_factory.getFlyweight(1));
+				    gameController = GameEngine.start("Very Simple Game in 99 Line of Code", clown, menuBar ,Color.black);
+				    
+				   
 				}
 			});
 		level2.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
-				   level=new level_two();
-				   clown=new Clown_world(1000, 700,level);
-				   gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown, menuBar, Color.black
-							);
-				   
+					jframe.dispose();
+				gameController.pause();
+				   clown=new Clown_world(1000, 700);
+				   clown.setstate(level_factory.getFlyweight(2));
+				   gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown, menuBar, Color.black);
+				  
 				}
 			});
 		level3.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
-				 level=new level_three();
-				 clown=new Clown_world(1000, 700,level);
-				 gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown, menuBar, Color.black
-							);
+				 jframe.dispose();
+				 clown=new Clown_world(1000, 700);
+				 clown.setstate(level_factory.getFlyweight(3));
+				 gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown, menuBar, Color.black);
+				 
 				}
 			});
 		remove.addActionListener(new ActionListener() {

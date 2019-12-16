@@ -9,8 +9,7 @@ public class picker_left extends Obj {
     private int pos;
 	public picker_left(int posX, int posY, String path, boolean type) {
 		super(posX, posY, path, type);
-		System.out.println("Hight left"+this.getHeight());
-		System.out.println("width left"+this.getWidth());
+		movingup=new UNmoveable();
 	}
 
 	 public int getPos() {
@@ -18,7 +17,7 @@ public class picker_left extends Obj {
 	   }
 	   @Override
 	   public void setX(int mX) {
-//			if(mX==1000-120 )return;
+			if(mX>=1000-120 )return;
 			this.x = mX;
 		      for (Update_axis observer : observers) 
 		          observer.updatex(this);

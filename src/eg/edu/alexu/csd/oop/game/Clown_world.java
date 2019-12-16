@@ -13,7 +13,7 @@ public class Clown_world implements World {
 	private final int width ;
 	private final int height ;
 	private final List<GameObject> constant = new LinkedList<GameObject>();
-	private final List<GameObject> moving = new ArrayList<GameObject>();
+	private final List<GameObject> moving = new LinkedList<GameObject>();
 	private final List<GameObject> control = new LinkedList<GameObject>();
 	private final Stack<dish_obj> filledRight=new Stack<dish_obj>();
 	private final Stack<dish_obj> filledLeft=new Stack<dish_obj>();
@@ -26,8 +26,8 @@ public class Clown_world implements World {
 	boolean timeout;
 	Levels level;
 	
-	public Clown_world(int screenWidth, int screenHeight,Levels ourlevel) {
-		this.level=ourlevel;
+	public Clown_world(int screenWidth, int screenHeight) {
+		
 		width = screenWidth;
 		height = screenHeight;
 		really_height=height-700;
@@ -50,6 +50,13 @@ public class Clown_world implements World {
 /***************************** Add Dishes At Down_Right ******************************************************************************/		
 		moving_width[3]=generate_dishes(moving_width[3],really_height+200,-55);
 	}
+	
+	public void setstate(Levels newlevel) {
+		level=newlevel;
+	}
+	
+	
+	
 	private boolean intersect(GameObject o1, GameObject o2){
 		return (Math.abs((o1.getX()+o1.getWidth()/2) - (o2.getX()+o2.getWidth()/2)) <= o1.getWidth()) && (Math.abs((o1.getY()+o1.getHeight()/2) - (o2.getY()+o2.getHeight()/2)) <= o1.getHeight());
 	}
@@ -283,27 +290,27 @@ public class Clown_world implements World {
 		if(where==0) {
 			m.setX(fighter.getX()-20);
 		}else if(where==1) {
-			m.setX(fighter.getX()+80);
+			m.setX(fighter.getX()+72);
 		}
 		filled.add((dish_obj) m);
 		originator.setState((Obj) m);
 		caretaker.addMemento(originator.save());
 		if(filled.size()<=2) {
 			m.setY(fighter.getY()-filled.size()*40);
-			filled.get(filled.size()-1).setMovingUp(false);
+			filled.get(filled.size()-1).setMoving(where);
 			control.add(m);
 		}else if(filled.size()>=3&&filled.size()<7) {
 			if(compare(filled)) {
 			}else {
 				m.setY(fighter.getY()-filled.size()*40);
-				filled.get(filled.size()-1).setMovingUp(false);
+				filled.get(filled.size()-1).setMoving(where);
 				control.add(m);
 			}
 		}else if(filled.size()==7) {
 			if(compare(filled)) {
 			}else {
 				m.setY(fighter.getY()-filled.size()*40);
-				filled.get(filled.size()-1).setMovingUp(false);
+				filled.get(filled.size()-1).setMoving(where);
 				control.add(m);
 				timeout=true;
 			}

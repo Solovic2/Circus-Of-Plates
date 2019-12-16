@@ -11,7 +11,7 @@ public abstract class Obj implements GameObject  {
 	protected int x;
 	private int y;
 	private boolean visible;
-	protected boolean movingUp;
+	protected MovingUp movingup;
 	protected String mypath;
 //	private clown_information subject;
 	
@@ -20,7 +20,7 @@ public abstract class Obj implements GameObject  {
 		this.x = posX;
 		this.y = posY;
 		this.visible = true;
-		this.movingUp=type;
+		
 //		this.subjects=subject;
 		
 		// create a bunch of buffered images and place into an array, to be displayed sequentially
@@ -39,7 +39,7 @@ public abstract class Obj implements GameObject  {
 
 	@Override
 	public void setX(int mX) {
-		if(mX==1000-120 )return;
+		
 		this.x = mX;
 		
 	}
@@ -51,7 +51,7 @@ public abstract class Obj implements GameObject  {
 
 	@Override
 	public void setY(int mY) {
-		if(movingUp)
+		if(movingup.move())
 		this.y = mY;
 	}
 
