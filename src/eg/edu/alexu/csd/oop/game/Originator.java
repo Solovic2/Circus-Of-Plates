@@ -2,20 +2,20 @@ package eg.edu.alexu.csd.oop.game;
 
 public class Originator {
 
-	private Obj shape;
+	private GameObject shape;
 	   
-	    public void setState(Obj state) {
+	    public void setState(GameObject state) {
 	        this.shape = state;
 	    }
 
 	    public Memento save() {
 	        return new Memento(shape);
 	    }
-	    public Obj restore(Memento m) {
+	    public GameObject restore(Memento m) {
 	        shape = m.getShape();
 	        return shape;
 	    }
-	    public Obj get() {
+	    public GameObject get() {
 	    	return shape;
 	    }
 }

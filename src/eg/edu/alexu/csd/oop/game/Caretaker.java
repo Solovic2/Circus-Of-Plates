@@ -13,11 +13,11 @@ public class Caretaker {
 	    public Memento getMemento(int index) {
 	        return mementos.get(index);
 	    }
-	    public Obj getMemento() {
+	    public GameObject getMemento() {
 	        return mementos.get(mementos.size()-1).getShape();
 	    }
 	    
-	    public void removeMemento(Obj m) {
+	    public void removeMemento(GameObject m) {
 	    	for(int i=0;i<mementos.size();i++) {
 	    		if(mementos.get(i).getShape()==m) {
 	    			mementos.remove(mementos.get(i));

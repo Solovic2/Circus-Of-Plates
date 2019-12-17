@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Shape implements GameObject{
+public class Shape implements GameObject,gettingPath{
 	
 	private static final int MAX_MSTATE = 1;
 	private  clown_information subjects=null;
@@ -14,21 +14,23 @@ public class Shape implements GameObject{
 	protected int x;
 	protected int y;
 	private boolean visible;
-	protected MovingUp movingup;
 	protected String mypath;
 
 	public void doit() {
 		x=450;
 		 y=0;
 		 visible=true;
-		 
-		 movingup=new moveable();
 		 try {
 				spriteImages[0] = ImageIO.read(getClass().getResourceAsStream("/dish01.png"));
 				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+	}
+	
+	public String getpath() {
+//		String sub=mypath.substring(1,7);
+		return "dish01";
 	}
 	@Override
 	public int getX() {
@@ -42,12 +44,13 @@ public class Shape implements GameObject{
 
 	@Override
 	public int getY() {
+		
 		return y;
 	}
 
 	@Override
 	public void setY(int y) {
-		if(movingup.move())
+		if(y>this.y)
 		this.y=y;
 	}
 

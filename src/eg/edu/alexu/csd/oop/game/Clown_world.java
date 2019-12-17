@@ -17,8 +17,8 @@ public class Clown_world implements World {
 	private final List<GameObject> constant = new LinkedList<GameObject>();
 	private final List<GameObject> moving = new LinkedList<GameObject>();
 	private final List<GameObject> control = new LinkedList<GameObject>();
-	private final Stack<dish_obj> filledRight=new Stack<dish_obj>();
-	private final Stack<dish_obj> filledLeft=new Stack<dish_obj>();
+	private final Stack<GameObject> filledRight=new Stack<GameObject>();
+	private final Stack<GameObject> filledLeft=new Stack<GameObject>();
 	private Caretaker caretaker = new Caretaker();
 	private Originator originator  = new Originator();
 	private picker_right rightHand;
@@ -113,10 +113,14 @@ public class Clown_world implements World {
 
 			if(ss!=null) {
 				ss.setY(ss.getY()+1);
-				if(intersect(ss, control.get(1))) {
-					System.out.println("intersect left");
-				}else if(intersect(ss, control.get(2))) {
-					System.out.println("intersect right");
+				
+				if(intersect(ss, control.get(1))||(filledLeft.size()!=0)&&intersect(ss,filledLeft.get(filledLeft.size()-1))) {
+					collect_score(filledLeft,0,ss,fighter,0,0,0);
+				}else if(intersect(ss, control.get(2))||filledRight.size()!=0&&intersect(ss,filledRight.get(filledRight.size()-1))) {
+					collect_score(filledRight,1,ss,fighter,0,0,0);
+				}else if(ss.getY()==getHeight()) {
+					moving.remove(28);
+					ss=null;
 				}
 			}
 //				if(m==moving.get(0)) {
@@ -296,63 +300,72 @@ public class Clown_world implements World {
 		// TODO Auto-generated method stub
 		return 20;
 	}
-	public void collect_score(Stack<dish_obj> filled,int where,GameObject m,Obj fighter,int first,int last,int forwidth) {
+	public void collect_score(Stack<GameObject> filled,int where,GameObject m,Obj fighter,int first,int last,int forwidth) {
 		
 		if(where==0) {
 			m.setX(fighter.getX()-20);
 		}else if(where==1) {
 			m.setX(fighter.getX()+72);
 		}
-		filled.add((dish_obj) m);
-		originator.setState((Obj) m);
+		filled.add( m);
+		originator.setState(m);
 		caretaker.addMemento(originator.save());
 		if(filled.size()<=2) {
 			m.setY(fighter.getY()-filled.size()*40);
-			filled.get(filled.size()-1).setMoving(where);
+			if(first!=last)((dish_obj) filled.get(filled.size()-1)).setMoving(where);
 			control.add(m);
 		}else if(filled.size()>=3&&filled.size()<7) {
 			if(compare(filled)) {
 			}else {
 				m.setY(fighter.getY()-filled.size()*40);
-				filled.get(filled.size()-1).setMoving(where);
+				if(first!=last)((dish_obj) filled.get(filled.size()-1)).setMoving(where);
 				control.add(m);
 			}
 		}else if(filled.size()==7) {
 			if(compare(filled)) {
 			}else {
 				m.setY(fighter.getY()-filled.size()*40);
-				filled.get(filled.size()-1).setMoving(where);
+				if(first!=last)((dish_obj) filled.get(filled.size()-1)).setMoving(where);
 				control.add(m);
 				timeout=true;
 			}
 		}
 
-		int w;		
-		moving.remove(first);
-		if(leftHand.observers.contains(m)){
-			leftHand.observers.remove(m);
-			rightHand.observers.remove(m);
-		}
-		if(first==7||first==21) {
-			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
-			if(first==7) {
-				w=width-20;
-			}else {
-				w=-25;
+		if(first==last) {
+			moving.remove(28);
+			ss=null;
+		}else {
+			int w;		
+			moving.remove(first);
+			if(leftHand.observers.contains(m)){
+				leftHand.observers.remove(m);
+				rightHand.observers.remove(m);
 			}
-			moving.get(last).setX(w);
-			}else{
-			moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
-			if(first==0) {
-				w=width-115;
-			}else {
-					w=20;
+			if(first==7||first==21) {
+				moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height+200, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
+				if(first==7) {
+					w=width-20;
+				}else {
+					w=-25;
 				}
 				moving.get(last).setX(w);
+				}else{
+				moving.add(last,factory.createObj("dish",moving_width[forwidth], really_height, "/dish" + (int)(1 + Math.random() * 7)+ ".png"));
+				if(first==0) {
+					w=width-115;
+				}else {
+						w=20;
+					}
+					moving.get(last).setX(w);
+			}
 		}
 	}
-	public boolean compare(Stack<dish_obj> filled) {
-		if(filled.get(filled.size()-1).getpath().equals(filled.get(filled.size()-2).getpath())&&filled.get(filled.size()-2).getpath().equals(filled.get(filled.size()-3).getpath())) {
+	public boolean compare(Stack<GameObject> filled) {
+		String s1=null,s2=null,s3=null;
+			s1=((gettingPath) filled.get(filled.size()-1)).getpath();
+			s2=((gettingPath) filled.get(filled.size()-2)).getpath();
+			s3=((gettingPath) filled.get(filled.size()-3)).getpath();
+		if(s1.equals(s2)&&s2.equals(s3)) {
 			caretaker.removeMemento(filled.get(filled.size()-1));
 			filled.remove(filled.size()-1);
 			control.remove(filled.get(filled.size()-1));
@@ -370,7 +383,7 @@ public class Clown_world implements World {
 	//remove the last dish
 	public void undo() {
 		if(control.size()>3) {
-			Obj n=caretaker.getMemento();
+			GameObject n=caretaker.getMemento();
 			if(filledLeft.contains(n)) {
 				filledLeft.remove(n);
 			}else {filledRight.remove(n);}
@@ -394,15 +407,18 @@ public class Clown_world implements World {
 		}
 		return arr.getwidth();
 	}
+	
 	//dynamic loading
 	public void load() {
 		
 		try {
-			Class shape=Shape.class;
-			Shape dd = (Shape) shape.newInstance();
-			dd.doit();
-			ss=dd;
-//			moving.add(dd);
+			if(ss==null) {
+				Class shape=Shape.class;
+				Shape dd = (Shape) shape.newInstance();
+				dd.doit();
+				ss=dd;
+				moving.add(dd);
+			}
 		} catch (InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

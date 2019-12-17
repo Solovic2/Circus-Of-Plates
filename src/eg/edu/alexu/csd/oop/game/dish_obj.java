@@ -1,6 +1,6 @@
 package eg.edu.alexu.csd.oop.game;
 
-public class dish_obj extends Obj implements Update_axis {
+public class dish_obj extends Obj implements Update_axis,gettingPath {
 	private int leftX;
 	private int rightX;
 	private int where=5;

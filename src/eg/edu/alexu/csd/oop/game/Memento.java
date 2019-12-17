@@ -2,13 +2,13 @@ package eg.edu.alexu.csd.oop.game;
 
 public class Memento {
 
-	 private Obj shape;
+	 private GameObject shape;
 
-	    public Memento(Obj state) {
+	    public Memento(GameObject state) {
 	        this.shape = state;
 	    }
 
-	    public Obj getShape() {
+	    public GameObject getShape() {
 	        return shape;
 	    }
 }
