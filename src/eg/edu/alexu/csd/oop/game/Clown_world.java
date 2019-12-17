@@ -1,8 +1,10 @@
 package eg.edu.alexu.csd.oop.game;
-import java.util.ArrayList;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+
+
 
 public class Clown_world implements World {
 	private static int MAX_TIME = 1 * 60 * 10000;	// game time
@@ -25,6 +27,7 @@ public class Clown_world implements World {
 	clown_information subject=new clown_information();
 	boolean timeout;
 	Levels level;
+	Shape ss=null;
 	
 	public Clown_world(int screenWidth, int screenHeight) {
 		
@@ -108,6 +111,14 @@ public class Clown_world implements World {
 			dish_obj m3 =(dish_obj)moving.get(0+14);
 			dish_obj m4 =(dish_obj)moving.get(0+21);
 
+			if(ss!=null) {
+				ss.setY(ss.getY()+1);
+				if(intersect(ss, control.get(1))) {
+					System.out.println("intersect left");
+				}else if(intersect(ss, control.get(2))) {
+					System.out.println("intersect right");
+				}
+			}
 //				if(m==moving.get(0)) {
 					m.setY(m.getY()+1);
 					if(!leftHand.observers.contains(m)) {
@@ -356,6 +367,7 @@ public class Clown_world implements World {
 		}
 		return false;
 	}
+	//remove the last dish
 	public void undo() {
 		if(control.size()>3) {
 			Obj n=caretaker.getMemento();
@@ -381,5 +393,25 @@ public class Clown_world implements World {
 			arr.Next();
 		}
 		return arr.getwidth();
+	}
+	//dynamic loading
+	public void load() {
+		
+		try {
+			Class shape=Shape.class;
+			Shape dd = (Shape) shape.newInstance();
+			dd.doit();
+			ss=dd;
+//			moving.add(dd);
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

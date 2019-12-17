@@ -54,7 +54,7 @@ public class Main {
 		JMenuItem newMenuItem = new JMenuItem("New");
 		JMenuItem pauseMenuItem = new JMenuItem("Pause");
 		JMenuItem resumeMenuItem = new JMenuItem("Resume");
-		JMenuItem remove = new JMenuItem("remove");
+		
 		JMenuItem level1 = new JMenuItem("Level one");
 		JMenuItem level2 = new JMenuItem("Level two");
 		JMenuItem level3 = new JMenuItem("Level three");
@@ -69,7 +69,10 @@ public class Main {
 		menulevel.add(level2);
 		menulevel.add(level3);
 		JMenu Edit = new JMenu("Edit");
+		JMenuItem remove = new JMenuItem("remove");
+		JMenuItem addShape = new JMenuItem("Add Shape");
 		Edit.add(remove);
+		Edit.add(addShape);
 		menuBar.add(Edit);
 		menuBar.add(menulevel);
 		
@@ -127,6 +130,11 @@ public class Main {
 				 clown.undo();
 				}
 			});
+		addShape.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				clown.load();
+			}
+		});
 	}
 
 }

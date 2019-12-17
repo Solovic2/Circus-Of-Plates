@@ -10,7 +10,6 @@ public class dish_obj extends Obj implements Update_axis {
 	}
 	public String getpath() {
 		String sub=mypath.substring(1,6);
-		System.out.println(sub);
 		return sub;
 	}
 
@@ -40,7 +39,6 @@ public class dish_obj extends Obj implements Update_axis {
 	@Override
 	public void updatex1(picker_right subject) {
 		this.rightX=subject.getPos2();
-		System.out.println("the right new x is  "+rightX);
 	}
 	@Override
 	public void updatey1(picker_right subject) {
