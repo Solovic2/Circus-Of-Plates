@@ -15,13 +15,14 @@ public class Shape implements GameObject,gettingPath{
 	protected int y;
 	private boolean visible;
 	protected String mypath;
+	private int where;
 
 	public void doit() {
 		x=450;
 		 y=0;
 		 visible=true;
 		 try {
-				spriteImages[0] = ImageIO.read(getClass().getResourceAsStream("/dish01.png"));
+				spriteImages[0] = ImageIO.read(getClass().getResourceAsStream("/java"+ (int)(1 + Math.random() * 3)+".png"));
 				
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -38,10 +39,14 @@ public class Shape implements GameObject,gettingPath{
 	}
 
 	@Override
-	public void setX(int x) {
-		this.x=x;
+	public void setX(int mX) {
+		if((mX>=1000-120&&where==0)|| (mX<=80&&where==1) )return;
+		this.x=mX;
 	}
 
+	public void setWhere(int n) {
+		this.where=n;
+	}
 	@Override
 	public int getY() {
 		
