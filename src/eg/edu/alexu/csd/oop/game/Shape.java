@@ -8,21 +8,21 @@ import javax.imageio.ImageIO;
 public class Shape implements GameObject,gettingPath{
 	
 	private static final int MAX_MSTATE = 1;
-	private  clown_information subjects=null;
 	// an array of sprite images that are drawn sequentially
 	private BufferedImage[] spriteImages = new BufferedImage[MAX_MSTATE];
 	protected int x;
 	protected int y;
 	private boolean visible;
 	protected String mypath;
-	private int where;
+	private int where=5;
 
 	public void doit() {
 		x=450;
 		 y=0;
 		 visible=true;
+		 mypath="/java"+ (int)(1 + Math.random() * 3)+".png";
 		 try {
-				spriteImages[0] = ImageIO.read(getClass().getResourceAsStream("/java"+ (int)(1 + Math.random() * 3)+".png"));
+				spriteImages[0] = ImageIO.read(getClass().getResourceAsStream(mypath));
 				
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -30,8 +30,8 @@ public class Shape implements GameObject,gettingPath{
 	}
 	
 	public String getpath() {
-//		String sub=mypath.substring(1,7);
-		return "dish01";
+		String sub=mypath.substring(1,6);
+		return sub;
 	}
 	@Override
 	public int getX() {
@@ -55,7 +55,7 @@ public class Shape implements GameObject,gettingPath{
 
 	@Override
 	public void setY(int y) {
-		if(y>this.y)
+		if(where==5)
 		this.y=y;
 	}
 

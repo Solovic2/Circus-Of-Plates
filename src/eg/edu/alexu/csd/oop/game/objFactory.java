@@ -2,7 +2,6 @@ package eg.edu.alexu.csd.oop.game;
 
 public class objFactory {
 	
-	clown_information dish;
 	
     /********************************Singleton Design Pattern********************************/
   private static objFactory instance = new objFactory();

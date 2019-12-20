@@ -10,4 +10,5 @@ public interface Itrator {
 	// Second : implement class for type which i want to loop .. look at class Arrays .
 	public boolean hasNext();
 	public void Next();
+	public void Next2();
 }

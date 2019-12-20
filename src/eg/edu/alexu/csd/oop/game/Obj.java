@@ -5,7 +5,6 @@ import javax.imageio.ImageIO;
 
 public abstract class Obj implements GameObject  {
 	private static final int MAX_MSTATE = 1;
-	private  clown_information subjects=null;
 	// an array of sprite images that are drawn sequentially
 	private BufferedImage[] spriteImages = new BufferedImage[MAX_MSTATE];
 	protected int x;
@@ -38,11 +37,7 @@ public abstract class Obj implements GameObject  {
 	}
 
 	@Override
-	public void setX(int mX) {
-		
-		this.x = mX;
-		
-	}
+	public abstract void setX(int mX) ;
 
 	@Override
 	public int getY() {

@@ -24,9 +24,8 @@ public class Clown_world implements World {
 	private picker_right rightHand;
 	private picker_left leftHand;
 	private final objFactory factory=objFactory.get_instance();
-	clown_information subject=new clown_information();
 	boolean timeout;
-	Levels level;
+	private Levels level;
 	Shape ss=null;
 	
 	public Clown_world(int screenWidth, int screenHeight) {
@@ -66,31 +65,26 @@ public class Clown_world implements World {
 	}
 	@Override
 	public List<GameObject> getConstantObjects() {
-		// TODO Auto-generated method stub
 		return constant;
 	}
 
 	@Override
 	public List<GameObject> getMovableObjects() {
-		// TODO Auto-generated method stub
 		return moving;
 	}
 
 	@Override
 	public List<GameObject> getControlableObjects() {
-		// TODO Auto-generated method stub
 		return control;
 	}
 
 	@Override
 	public int getWidth() {
-		// TODO Auto-generated method stub
 		return width;
 	}
 
 	@Override
 	public int getHeight() {
-		// TODO Auto-generated method stub
 		return height;
 	}
 	@Override
@@ -102,8 +96,7 @@ public class Clown_world implements World {
 			dish_obj m4 =(dish_obj)moving.get(3);
 
 			if(ss!=null) {
-				ss.setY(ss.getY()+1);
-				
+				ss.setY(ss.getY()+1);	
 				if(intersect(ss, control.get(1))||(filledLeft.size()!=0)&&intersect(ss,filledLeft.get(filledLeft.size()-1))) {
 					ss.setWhere(0);
 					collect_score(filledLeft,0,ss,fighter,0,0,0);
@@ -160,9 +153,7 @@ public class Clown_world implements World {
 			}else if((filledRight.size()!=0&&intersect(m,filledRight.get(filledRight.size()-1)))||m.intersectRight()) {
 					 collect_score( filledRight,1,m,fighter,0,1,width);
 			} 
-			
 			else if(m.getY()==getHeight()){
-				// reuse the star in another position
 						moving.remove(0);
 						if(leftHand.observers.contains(m)){
 							leftHand.observers.remove(m);
@@ -223,19 +214,16 @@ public class Clown_world implements World {
 
 	@Override
 	public String getStatus() {
-		// TODO Auto-generated method stub
 		return "Score=" + score + "   |   Time=" + Math.max(0, (MAX_TIME - (System.currentTimeMillis()-startTime))/1000);	// update status
 	}
 
 	@Override
 	public int getSpeed() {
-		// TODO Auto-generated method stub
 		return level.speedup();
 	}
 
 	@Override
 	public int getControlSpeed() {
-		// TODO Auto-generated method stub
 		return 20;
 	}
 	public void collect_score(Stack<GameObject> filled,int where,GameObject m,Obj fighter,int first,int last,int forwidth) {
@@ -306,7 +294,7 @@ public class Clown_world implements World {
 		return false;
 	}
 	//remove the last dish
-	public void undo() {
+	public void removeLast() {
 		if(control.size()>3) {
 			GameObject n=caretaker.getMemento();
 			if(filledLeft.contains(n)) {
@@ -322,14 +310,7 @@ public class Clown_world implements World {
 			
 		return width;
 	}
-	/************************* Itrator For Shifting ************************************************************/
-//	public int my_itrateor(List<GameObject> objects,int start, int end ,int moving_width,int counter) {
-//		Array_list arr=new Array_list(objects,start,end,moving_width,counter);
-//		while(arr.hasNext()) {
-//			arr.Next();
-//		}
-//		return arr.getwidth();
-//	}
+
 	
 	//dynamic loading
 	public void load() {
@@ -343,13 +324,10 @@ public class Clown_world implements World {
 				moving.add(dd);
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

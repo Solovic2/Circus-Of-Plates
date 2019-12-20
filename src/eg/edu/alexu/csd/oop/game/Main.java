@@ -78,7 +78,7 @@ public class Main {
 		
 		clown=new Clown_world(1000, 700);
 		 clown.setstate(level_factory.getFlyweight(1));
-		 gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown , menuBar,Color.black);
+		 gameController = GameEngine.start("Circus Of Plates",clown , menuBar,Color.black);
 		 jframe = (JFrame) SwingUtilities.getWindowAncestor(menuBar);
 		newMenuItem.addActionListener(new ActionListener() {
 		@Override public void actionPerformed(ActionEvent e) {
@@ -101,7 +101,7 @@ public class Main {
 					jframe.dispose();
 					clown=new Clown_world(1000, 700);
 				    clown.setstate(level_factory.getFlyweight(1));
-				    gameController = GameEngine.start("Very Simple Game in 99 Line of Code", clown, menuBar ,Color.black);
+				    gameController = GameEngine.start("Circus Of Plates", clown, menuBar ,Color.black);
 				    
 				   
 				}
@@ -112,7 +112,7 @@ public class Main {
 				gameController.pause();
 				   clown=new Clown_world(1000, 700);
 				   clown.setstate(level_factory.getFlyweight(2));
-				   gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown, menuBar, Color.black);
+				   gameController = GameEngine.start("Circus Of Plates",clown, menuBar, Color.black);
 				  
 				}
 			});
@@ -121,13 +121,13 @@ public class Main {
 				 jframe.dispose();
 				 clown=new Clown_world(1000, 700);
 				 clown.setstate(level_factory.getFlyweight(3));
-				 gameController = GameEngine.start("Very Simple Game in 99 Line of Code",clown, menuBar, Color.black);
+				 gameController = GameEngine.start("Circus Of Plates",clown, menuBar, Color.black);
 				 
 				}
 			});
 		remove.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
-				 clown.undo();
+				 clown.removeLast();
 				}
 			});
 		addShape.addActionListener(new ActionListener() {

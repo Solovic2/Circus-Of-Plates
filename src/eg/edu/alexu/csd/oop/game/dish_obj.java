@@ -27,7 +27,6 @@ public class dish_obj extends Obj implements Update_axis,gettingPath {
 	@Override
 	public void updatex( picker_left subject) {
 		this.leftX=subject.getPos();
-		System.out.println("the left new x is  "+leftX);
 	}
 
 	@Override
@@ -42,8 +41,6 @@ public class dish_obj extends Obj implements Update_axis,gettingPath {
 	}
 	@Override
 	public void updatey1(picker_right subject) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	 public void setX(int mX) {

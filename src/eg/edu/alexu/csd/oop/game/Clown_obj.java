@@ -1,7 +1,5 @@
 package eg.edu.alexu.csd.oop.game;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Clown_obj extends Obj  {
 
