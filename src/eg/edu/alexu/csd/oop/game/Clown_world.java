@@ -7,7 +7,7 @@ import java.util.Stack;
 
 
 public class Clown_world implements World {
-	private static int MAX_TIME = 1 * 60 * 10000;	// game time
+	private static int MAX_TIME = 1 * 60 * 2000;	// game time
 	private int score = 0;
 	private int really_height;
 	private long endTime, startTime = System.currentTimeMillis();
